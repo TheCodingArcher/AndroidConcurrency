@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
         log("Running code");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //  Clear the output, called from the onClick event in the layout file
