@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
