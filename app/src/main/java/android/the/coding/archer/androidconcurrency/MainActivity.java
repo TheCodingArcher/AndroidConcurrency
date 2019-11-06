@@ -1,5 +1,6 @@
 package android.the.coding.archer.androidconcurrency;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,11 +34,20 @@ public class MainActivity extends AppCompatActivity {
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
         log("Running code");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Handler handler = new Handler();
+        handler.post(runnable);
     }
 
     //  Clear the output, called from the onClick event in the layout file
