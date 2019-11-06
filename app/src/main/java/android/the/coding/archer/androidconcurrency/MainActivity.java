@@ -111,5 +111,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onCancelled() {
             log("Task Cancelled.");
         }
+
+        @Override
+        protected void onCancelled(String s) {
+            log("Cancelled with result: " + s);
+        }
     }
 }
