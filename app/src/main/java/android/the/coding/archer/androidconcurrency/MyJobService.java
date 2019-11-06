@@ -12,10 +12,26 @@ public class MyJobService extends JobService {
     }
 
     @Override
-    public boolean onStartJob(JobParameters jobParameters) {
+    public boolean onStartJob(final JobParameters jobParameters) {
         Log.i(TAG, "onStartJob: " + jobParameters.getJobId());
-        jobFinished(jobParameters, false);
-        return false;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG, "run: job completed");
+                jobFinished(jobParameters, false);
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        return true;
     }
 
     @Override
