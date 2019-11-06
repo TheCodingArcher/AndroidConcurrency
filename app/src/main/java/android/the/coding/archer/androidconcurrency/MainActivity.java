@@ -1,6 +1,8 @@
 package android.the.coding.archer.androidconcurrency;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +14,14 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "CodeRunner";
+    private static final String MESSAGE_KEY = "message_key";
 
     // View object references
     private ScrollView mScroll;
     private TextView mLog;
     private ProgressBar mProgressBar;
+
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progress_bar);
 
         mLog.setText(R.string.lorem_ipsum);
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String message = bundle.getString(MESSAGE_KEY);
+                log(message);
+                displayProgressBar(false);
+            }
+        };
     }
 
     //  Run some code, called from the onClick event in the layout file
@@ -45,16 +60,17 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Log.i(TAG, "run: Ending Thread");
+
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString(MESSAGE_KEY, "Thread Completed.");
+                message.setData(bundle);
+                mHandler.sendMessage(message);
             }
         };
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(runnable, 5000);
         Thread thread = new Thread(runnable);
         thread.start();
-        // NB: Do not use run() method, as it will still run on the Main Thread
-        // and block the UI. Always use start() method to run a new Thread.
     }
 
     //  Clear the output, called from the onClick event in the layout file
