@@ -2,6 +2,7 @@ package android.the.coding.archer.androidconcurrency;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.the.coding.archer.androidconcurrency.service.MyIntentService;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
         log("Running code");
+        MyIntentService.startActionFoo(this, "Value 1", "Value 2");
     }
 
     //  Clear the output, called from the onClick event in the layout file
