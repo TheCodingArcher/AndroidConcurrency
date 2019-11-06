@@ -39,13 +39,22 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "run: runnable complete");
-                displayProgressBar(false);
+                Log.i(TAG, "run: Starting Thread for 5 seconds");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG, "run: Ending Thread");
             }
         };
 
-        Handler handler = new Handler();
-        handler.postDelayed(runnable, 5000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(runnable, 5000);
+        Thread thread = new Thread(runnable);
+        thread.start();
+        // NB: Do not use run() method, as it will still run on the Main Thread
+        // and block the UI. Always use start() method to run a new Thread.
     }
 
     //  Clear the output, called from the onClick event in the layout file
