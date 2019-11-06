@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private ScrollView mScroll;
     private TextView mLog;
     private ProgressBar mProgressBar;
+    private MyTask mTask;
+    private boolean mTaskRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +35,14 @@ public class MainActivity extends AppCompatActivity {
 
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
-        MyTask myTask = new MyTask();
-        myTask.execute("Red", "Green", "Blue");
-
-        // NB: we can't run the same task more than once
-        // it will result in crash.
-        // However, we can create multiple object of same AsyncTask
-        // and run one after another
-        MyTask myTask2 = new MyTask();
-        myTask2.execute("Bruce", "Nightwing", "Robin", "Jason");
+        if (mTaskRunning && mTask != null) {
+            mTask.cancel(true);
+            mTaskRunning = false;
+        } else {
+            mTask = new MyTask();
+            mTask.execute("Red", "Green", "Blue");
+            mTaskRunning = true;
+        }
     }
 
     //  Clear the output, called from the onClick event in the layout file
@@ -81,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             for (String value :
                     strings) {
+                if (isCancelled()) {
+                    publishProgress("Cancelled");
+                    break;
+                }
                 Log.i(TAG, "doInBackground: " + value);
                 publishProgress(value);
                 try {
@@ -100,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             log(s);
+        }
+
+        @Override
+        protected void onCancelled() {
+            log("Task Cancelled.");
         }
     }
 }
