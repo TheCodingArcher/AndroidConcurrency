@@ -1,68 +1,56 @@
 package android.the.coding.archer.androidconcurrency;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "CodeRunner";
+    private static final int REQUEST_CODE_PERMISSION = 14;
 
-    // View object references
-    private ScrollView mScroll;
-    private TextView mLog;
-    private ProgressBar mProgressBar;
+    ListView mListView;
+    private boolean mPermissionGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize the logging components
-        mScroll = findViewById(R.id.scrollLog);
-        mLog = findViewById(R.id.tvLog);
-        mProgressBar = findViewById(R.id.progress_bar);
+        mListView = findViewById(R.id.list_view);
 
-        mLog.setText(R.string.lorem_ipsum);
-    }
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS);
 
-    //  Run some code, called from the onClick event in the layout file
-    public void runCode(View v) {
-        log("Running code");
-    }
-
-    //  Clear the output, called from the onClick event in the layout file
-    public void clearOutput(View v) {
-        mLog.setText("");
-        scrollTextToEnd();
-    }
-
-    //  Log output to logcat and the screen
-    private void log(String message) {
-        Log.i(TAG, message);
-        mLog.append(message + "\n");
-        scrollTextToEnd();
-    }
-
-    private void scrollTextToEnd() {
-        mScroll.post(new Runnable() {
-            @Override
-            public void run() {
-                mScroll.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
-    }
-
-    @SuppressWarnings("unused")
-    private void displayProgressBar(boolean display) {
-        if (display) {
-            mProgressBar.setVisibility(View.VISIBLE);
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            mPermissionGranted = true;
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            loadContactsData();
         } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                this.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                        REQUEST_CODE_PERMISSION);
+            }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSION &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+            mPermissionGranted = true;
+            loadContactsData();
+        }
+    }
+
+    private void loadContactsData() {
     }
 }
