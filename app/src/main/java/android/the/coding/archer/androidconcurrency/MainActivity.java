@@ -34,20 +34,18 @@ public class MainActivity extends AppCompatActivity {
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
         log("Running code");
+        displayProgressBar(true);
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Log.i(TAG, "run: runnable complete");
+                displayProgressBar(false);
             }
         };
 
         Handler handler = new Handler();
-        handler.post(runnable);
+        handler.postDelayed(runnable, 5000);
     }
 
     //  Clear the output, called from the onClick event in the layout file
