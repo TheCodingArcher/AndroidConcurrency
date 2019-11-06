@@ -84,17 +84,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "doInBackground: " + value);
                 publishProgress(value);
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return "thread all done.";
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
             log(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            log(s);
         }
     }
 }
