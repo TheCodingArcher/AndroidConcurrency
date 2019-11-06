@@ -20,7 +20,7 @@ public class MyIntentService extends IntentService {
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "android.the.coding.archer.androidconcurrency.service.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "android.the.coding.archer.androidconcurrency.service.extra.PARAM2";
-    public static final String CODE_RUNNER = "CodeRunner";
+    public static final String TAG = "CodeRunner";
 
     public MyIntentService() {
         super("MyIntentService");
@@ -58,12 +58,22 @@ public class MyIntentService extends IntentService {
      * parameters.
      */
     private void handleActionFoo(String param1, String param2) {
-        Log.i(CODE_RUNNER, "handleActionFoo: Service Started");
+        Log.i(TAG, "handleActionFoo: Service Started");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Log.i(CODE_RUNNER, "handleActionFoo: Service Finished");
+        Log.i(TAG, "handleActionFoo: Service Finished");
+    }
+
+    @Override
+    public void onCreate() {
+        Log.i(TAG, "onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy");
     }
 }
