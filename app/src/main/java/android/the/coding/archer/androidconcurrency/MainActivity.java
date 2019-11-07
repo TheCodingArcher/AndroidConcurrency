@@ -2,11 +2,19 @@ package android.the.coding.archer.androidconcurrency;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.the.coding.archer.androidconcurrency.model.DataItems;
+import android.the.coding.archer.androidconcurrency.service.MyWebService;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +40,24 @@ public class MainActivity extends AppCompatActivity {
 
     //  Run some code, called from the onClick event in the layout file
     public void runCode(View v) {
-        log("Running code");
+        MyWebService myWebService = MyWebService.retrofit.create(MyWebService.class);
+        Call<List<DataItems>> call = myWebService.dataItems();
+        call.enqueue(new Callback<List<DataItems>>() {
+            @Override
+            public void onResponse(Call<List<DataItems>> call, Response<List<DataItems>> response) {
+                if (response.isSuccessful()) {
+                    for (DataItems item :
+                            response.body()) {
+                        log(item.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DataItems>> call, Throwable t) {
+
+            }
+        });
     }
 
     //  Clear the output, called from the onClick event in the layout file
